@@ -4,6 +4,7 @@ namespace Kata\Tests;
 
 use Kata\Application\UseCase\MessageDeleted;
 use Kata\Application\UseCase\MessagePosted;
+use Kata\Application\UseCase\PostedMessageCounter;
 use Kata\Infrastructure\InMemory\InMemoryEventStream;
 use Kata\Infrastructure\Message;
 use PHPUnit\Framework\TestCase;
@@ -77,4 +78,28 @@ class KataTest extends TestCase
         );
         $this->assertCount(2, $history->getEvents());
     }
+
+    /**
+     * @test
+     */
+    public function givenMessageWhenMessagePosterThenCounterShouldBeIncremented()
+    {
+        $counter = new PostedMessageCounter();
+        $counter->handle(new MessagePosted('hello'));
+        $this->assertEquals(1, $counter->getValue());
+    }
+
+    /**
+     * @test
+     */
+    public function givenMessageWhenMessageDeletedThenCounterShouldBeDecremented()
+    {
+        $counter = new PostedMessageCounter();
+        $counter->handle(new MessagePosted('hello'));
+        $counter->handle(new MessagePosted('hello'));
+        $counter->handle(new MessageDeleted());
+        $this->assertEquals(1, $counter->getValue());
+    }
+
+
 }
