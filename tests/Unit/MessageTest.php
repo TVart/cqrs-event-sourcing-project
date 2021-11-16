@@ -1,17 +1,19 @@
 <?php
 
-namespace Kata\Tests;
+namespace Kata\Tests\Unit;
 
 use Kata\Application\UseCase\MessageDeleted;
 use Kata\Application\UseCase\MessagePosted;
 use Kata\Application\UseCase\PostedMessageCounter;
+use Kata\Application\UseCase\Timeline;
+use Kata\Application\UseCase\TimelineMessage;
 use Kata\Infrastructure\InMemory\InMemoryEventStream;
 use Kata\Infrastructure\Message;
 use PHPUnit\Framework\TestCase;
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
-class KataTest extends TestCase
+class MessageTest extends TestCase
 {
 
     /**
@@ -101,5 +103,15 @@ class KataTest extends TestCase
         $this->assertEquals(1, $counter->getValue());
     }
 
-
+    /**
+     * @test
+     */
+    public function givenMessageWhenMessagePostedThenTimelineShouldDisplayMessage()
+    {
+        $timeline = new Timeline();
+        $postedMessage = new MessagePosted("hello");
+        $timeline->handle($postedMessage);
+        $this->assertContainsOnlyInstancesOf(TimelineMessage::class, $timeline->getMessages());
+        $this->assertEquals(new TimelineMessage($postedMessage), $timeline->getMessages()[0]);
+    }
 }

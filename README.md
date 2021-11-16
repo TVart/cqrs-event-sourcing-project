@@ -19,8 +19,12 @@ Cas d'école pour comprendre les patterns d'architecture CQRS et Event Sourcing.
     
     Toute est articulé au sujet d'aggrégat, et d'historicisation des différents états de chaque instance d'aggregat. L'état final de l'aggrégat étant calculé
     par les différents évenements qui sont stokés soit dans un event store, soit dans un event stream. 
-
+ 
 ## Message
     L'objectif de l'application qui est construite dans ce projet est celle d'un clone de Twitter.  
 
 ## EventStream / History
+
+## Remarque
+    Quand un test est au présent, cela test une commande
+    Quand un test est au passé, c'est pour tester un évenement

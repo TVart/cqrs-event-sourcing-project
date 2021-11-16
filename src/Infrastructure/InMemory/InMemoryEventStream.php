@@ -26,6 +26,10 @@ class InMemoryEventStream implements EventStream
         return $this->history;
     }
 
+    /**
+     * @param int $index
+     * @return MessageEvent|null
+     */
     public function getItemAtIndex(int $index){
         return isset($this->history[$index]) ? $this->history[$index] :  null;
     }
