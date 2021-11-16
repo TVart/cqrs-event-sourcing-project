@@ -20,17 +20,15 @@ Cas d'école pour comprendre les patterns d'architecture CQRS et Event Sourcing.
     Toute est articulé au sujet d'aggrégat, et d'historicisation des différents états de chaque instance d'aggregat. L'état final de l'aggrégat étant calculé
     par les différents évenements qui sont stockés soit dans un event store, soit dans un event stream. 
  
-## Message
+## Message / EventMessage
     L'envoie des message, la suppression des message et l'affichage des messages publiés dans la timeline font partie des use case métier du domaine.
 
 ## EventBus / EventStream
     Les evenements ajout et suppression des messages passent par un EventBus, qui met à jour L'eventStream (ou le flux des évènements    
 
 ## Timeline
-    La timeline est     
 
-## EventStream / History
 
-## Remarque
-    Quand un test est au présent, cela test une commande
-    Quand un test est au passé, c'est pour tester un évenement
+## EventStream / EventPublisher
+
+## EventSubscriber
