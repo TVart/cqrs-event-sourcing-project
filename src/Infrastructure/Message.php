@@ -5,6 +5,7 @@ namespace Kata\Infrastructure;
 use Kata\Application\UseCase\DecisionProjection;
 use Kata\Application\UseCase\MessageDeleted;
 use Kata\Application\UseCase\MessagePosted;
+use Kata\Domain\EventPublisher;
 use Kata\Domain\EventStream;
 
 class Message
@@ -23,29 +24,29 @@ class Message
 
 
     /**
-     * @param EventStream $history
+     * @param EventPublisher $publisher
      * @param string $message
      */
-    public function post(EventStream $history, string $message){
-        $history->add(new MessagePosted($message));
+    public function post(EventPublisher $publisher, string $message){
+        $publisher->publish(new MessagePosted($message));
     }
 
     /**
-     * @param EventStream $history
+     * @param EventPublisher $publisher
      */
-    public function delete(EventStream $history){
+    public function delete(EventPublisher $publisher){
         if($this->projection->isDeleted()) {
             return;
         }
-        $this->publishAndApply($history, new MessageDeleted());
+        $this->publishAndApply($publisher, new MessageDeleted());
     }
 
     /**
-     * @param EventStream $history
+     * @param EventPublisher $publisher
      * @param MessageDeleted $event
      */
-    private function publishAndApply(EventStream $history, MessageDeleted $event){
-        $history->add($event);
+    private function publishAndApply(EventPublisher $publisher, MessageDeleted $event){
+        $publisher->publish($event);
         $this->projection->apply($event);
     }
 }

@@ -16,13 +16,18 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 class ApplicationTest extends TestCase
 {
+    /**
+     * @test
+     */
     public function givenApplicationWhenPostMessageThenShouldDisplayMessageInTimeline(){
-        /*$timeline = new Timeline();
+        $eventBus = new EventsBus(new InMemoryEventStream());
+        $timeline = new Timeline();
+        $eventBus->subscribe($timeline);
         $inMemoryStream = new InMemoryEventStream();
         $message = new Message($inMemoryStream);
-        $message->post($inMemoryStream,"hello");
+        $message->post($eventBus,"hello");
         $this->assertContainsOnlyInstancesOf(TimelineMessage::class, $timeline->getMessages());
-        $this->assertEquals(new TimelineMessage("hello"), $timeline->getMessages()[0]);*/
+        $this->assertEquals(new TimelineMessage("hello"), $timeline->getMessages()[0]);
     }
 
     /**
@@ -46,9 +51,9 @@ class ApplicationTest extends TestCase
      */
     public function givenEventBusWhenPublishEventsThenCallEachHandlers(){
         $eventBus = new EventsBus(new InMemoryEventStream());
-        $subscriber1 = new EventSubscriber(MessagePosted::class);
-        $subscriber2 = new EventSubscriber(MessagePosted::class);
-        $subscriber3 = new EventSubscriber(MessageDeleted::class);
+        $subscriber1 = new Timeline(MessagePosted::class);
+        $subscriber2 = new Timeline(MessagePosted::class);
+        $subscriber3 = new Timeline(MessageDeleted::class);
         $eventBus->subscribe($subscriber1);
         $eventBus->subscribe($subscriber2);
         $eventBus->subscribe($subscriber3);

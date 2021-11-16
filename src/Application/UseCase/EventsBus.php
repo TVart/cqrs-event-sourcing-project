@@ -2,11 +2,12 @@
 
 namespace Kata\Application\UseCase;
 
+use Kata\Domain\EventPublisher;
 use Kata\Domain\EventStream;
 use Kata\Domain\MessageEvent;
 use MongoDB\Driver\Monitoring\Subscriber;
 
-class EventsBus
+class EventsBus implements EventPublisher
 {
     /**
      * @var EventStream $stream
@@ -27,7 +28,7 @@ class EventsBus
         $this->stream->add($event);
         foreach ($this->subscribers as $subscriber){
             if(is_a($event, $subscriber->getEventType())){
-                $subscriber->handle();
+                $subscriber->handle($event);
             }
         }
     }

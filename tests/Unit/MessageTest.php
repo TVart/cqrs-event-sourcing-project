@@ -2,6 +2,7 @@
 
 namespace Kata\Tests\Unit;
 
+use Kata\Application\UseCase\EventsBus;
 use Kata\Application\UseCase\MessageDeleted;
 use Kata\Application\UseCase\MessagePosted;
 use Kata\Application\UseCase\PostedMessageCounter;
@@ -24,27 +25,29 @@ class MessageTest extends TestCase
         /**
          * @var
          */
-        $history = new InMemoryEventStream();
-        $message = new Message($history);
-        $message->post($history, 'Hello');
+        $stream = new InMemoryEventStream();
+        $eventsBus = new EventsBus($stream);
+        $message = new Message($stream);
+        $message->post($eventsBus, 'Hello');
         $this->assertEquals(
             new MessagePosted('Hello'),
-            $history->getItemAtIndex(count($history->getEvents())-1)
+            $stream->getItemAtIndex(count($stream->getEvents())-1)
         );
-        $this->assertCount(1, $history->getEvents());
+        $this->assertCount(1, $stream->getEvents());
     }
 
     /**
      * @test
      */
     public function givenMessageWhenDeleteMessageThenMessageShouldBeDeleted(){
-        $history = new InMemoryEventStream();
-        $history->add(new MessagePosted('Hello'));
-        $message = new Message($history);
-        $message->delete($history);
+        $stream = new InMemoryEventStream();
+        $eventsBus = new EventsBus($stream);
+        $stream->add(new MessagePosted('Hello'));
+        $message = new Message($stream);
+        $message->delete($eventsBus);
         $this->assertEquals(
             new MessageDeleted(),
-            $history->getItemAtIndex(count($history->getEvents())-1)
+            $stream->getItemAtIndex(count($stream->getEvents())-1)
         );
     }
 
@@ -52,33 +55,35 @@ class MessageTest extends TestCase
      * @test
      */
     public function notRaiseMessageDeletedWhenDeleteDeletedMessage(){
-        $history = new InMemoryEventStream();
-        $history->add(new MessagePosted('Hello'));
-        $history->add(new MessageDeleted());
-        $message = new Message($history);
-        $message->delete($history);
+        $stream = new InMemoryEventStream();
+        $eventsBus = new EventsBus($stream);
+        $stream->add(new MessagePosted('Hello'));
+        $stream->add(new MessageDeleted());
+        $message = new Message($stream);
+        $message->delete($eventsBus);
         $this->assertEquals(
             new MessageDeleted(),
-            $history->getItemAtIndex(count($history->getEvents())-1)
+            $stream->getItemAtIndex(count($stream->getEvents())-1)
         );
-        $this->assertCount(2, $history->getEvents());
+        $this->assertCount(2, $stream->getEvents());
     }
 
     /**
      * @test
      */
     public function notRaiseMessageDeletedWhenTwiceDelete(){
-        $history = new InMemoryEventStream();
-        $history->add(new MessagePosted('Hello'));
-        $history->add(new MessageDeleted());
-        $message = new Message($history);
-        $message->delete($history);
-        $message->delete($history);
+        $stream = new InMemoryEventStream();
+        $eventsBus = new EventsBus($stream);
+        $stream->add(new MessagePosted('Hello'));
+        $stream->add(new MessageDeleted());
+        $message = new Message($stream);
+        $message->delete($eventsBus);
+        $message->delete($eventsBus);
         $this->assertEquals(
             new MessageDeleted(),
-            $history->getItemAtIndex(count($history->getEvents())-1)
+            $stream->getItemAtIndex(count($stream->getEvents())-1)
         );
-        $this->assertCount(2, $history->getEvents());
+        $this->assertCount(2, $stream->getEvents());
     }
 
     /**

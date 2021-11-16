@@ -4,7 +4,7 @@ namespace Kata\Application\UseCase;
 
 use Kata\Domain\MessageEvent;
 
-class EventSubscriber
+abstract class EventSubscriber
 {
 
     private $isCalled = false;
@@ -15,7 +15,7 @@ class EventSubscriber
         $this->eventType = $eventType;
     }
 
-    public function handle(): void
+    public function handle(MessageEvent $event): void
     {
         $this->isCalled = true;
     }
