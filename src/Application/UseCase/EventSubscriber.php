@@ -15,10 +15,7 @@ class EventSubscriber
         $this->eventType = $eventType;
     }
 
-    /**
-     * @param MessageEvent $event
-     */
-    public function handle(MessageEvent $event): void
+    public function handle(): void
     {
         $this->isCalled = true;
     }

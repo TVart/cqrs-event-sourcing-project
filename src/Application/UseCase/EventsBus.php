@@ -16,7 +16,7 @@ class EventsBus
     /**
      * @var EventSubscriber[]
      */
-    private $subscribers;
+    private $subscribers=[];
 
     public function __construct(EventStream $stream)
     {
@@ -27,7 +27,7 @@ class EventsBus
         $this->stream->add($event);
         foreach ($this->subscribers as $subscriber){
             if(is_a($event, $subscriber->getEventType())){
-                $subscriber->handle($event);
+                $subscriber->handle();
             }
         }
     }
@@ -35,12 +35,5 @@ class EventsBus
     public function subscribe(EventSubscriber $subscriber)
     {
         $this->subscribers[] = $subscriber;
-    }
-
-    /**
-     * @return EventSubscriber[]
-     */
-    public function getSubscribers(){
-        return $this->subscribers;
     }
 }

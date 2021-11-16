@@ -18,10 +18,16 @@ Cas d'école pour comprendre les patterns d'architecture CQRS et Event Sourcing.
     d'opération de mise à jour d'état.
     
     Toute est articulé au sujet d'aggrégat, et d'historicisation des différents états de chaque instance d'aggregat. L'état final de l'aggrégat étant calculé
-    par les différents évenements qui sont stokés soit dans un event store, soit dans un event stream. 
+    par les différents évenements qui sont stockés soit dans un event store, soit dans un event stream. 
  
 ## Message
-    L'objectif de l'application qui est construite dans ce projet est celle d'un clone de Twitter.  
+    L'envoie des message, la suppression des message et l'affichage des messages publiés dans la timeline font partie des use case métier du domaine.
+
+## EventBus / EventStream
+    Les evenements ajout et suppression des messages passent par un EventBus, qui met à jour L'eventStream (ou le flux des évènements    
+
+## Timeline
+    La timeline est     
 
 ## EventStream / History
 
